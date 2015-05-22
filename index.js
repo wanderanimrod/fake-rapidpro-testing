@@ -5,7 +5,7 @@ app.use(bodyParser.json());
 
 var mongo = require('mongodb');
 var monk = require('monk');
-var db = monk('localhost:27017/node_messages');
+var db = monk(process.env.MONGOLAB_URI || 'localhost:27017/node_messages');
 
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
