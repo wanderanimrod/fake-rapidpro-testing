@@ -18,9 +18,14 @@ app.use(function(req,res,next){
 app.post('/', function(request, response) {
 	var db = request.db;
 	var collection = db.get('node_messages');
-	request.body.forEach(function(node_message) {
+	if(request.body.hasOwnProperty('length')) {
+		request.body.forEach(function(node_message) {
+			collection.insert(node_message);
+		});
+	}
+	else {
 		collection.insert(request.body);
-	});
+	}
   	console.log('node messages added');
   	response.send('node messages added');
 });
