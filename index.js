@@ -29,8 +29,9 @@ app.post('/', function(request, response) {
 });
 
 app.get('/', function(request, response) {
-	request.db.get('last_updated').findOne({}, function(error, success) {
-		response.status(200).send('Last received data at: ' + success.lastUpdated);
+	request.db.get('last_updated').findOne({}).then(function(lastUpdatedDoc) {
+		var lastUpdated = lastUpdatedDoc ? lastUpdatedDoc.lastUpdated : 'NO DATA RECEIVED SINCE UPGRADE.';
+		response.status(200).send('Last received data at: ' + lastUpdated);
 	});
 
 });
