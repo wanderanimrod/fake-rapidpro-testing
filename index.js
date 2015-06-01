@@ -17,17 +17,22 @@ app.use(function(req,res,next){
 
 app.post('/', function(request, response) {
 	var db = request.db;
-	var collection = db.get('node_messages');
-	if(request.body.hasOwnProperty('length')) {
-		request.body.forEach(function(node_message) {
-			collection.insert(node_message);
-		});
-	}
-	else {
-		collection.insert(request.body);
-	}
+	var nodeMessagesCollection = db.get('node_messages');
+	request.body.forEach(function(node_message) {
+		nodeMessagesCollection.insert(node_message);
+	});
+	var lastUpdatedCollection = db.get('last_updated');
+	lastUpdatedCollection.remove();
+	lastUpdatedCollection.insert({lastUpdated: Date()});
   	console.log('node messages added');
-  	response.send('node messages added');
+  	response.status(201).send('node messages added');
+});
+
+app.get('/', function(request, response) {
+	request.db.get('last_updated').findOne({}, function(error, success) {
+		response.status(200).send('Last received data at: ' + success.lastUpdated);
+	});
+
 });
 
 app.listen(app.get('port'), function() {
