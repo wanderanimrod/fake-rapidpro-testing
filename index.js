@@ -22,7 +22,7 @@ app.post('/', function(request, response) {
 		nodeMessagesCollection.insert(node_message);
 	});
 	var lastUpdatedCollection = db.get('last_updated');
-	lastUpdatedCollection.remove();
+	lastUpdatedCollection.remove({});
 	lastUpdatedCollection.insert({lastUpdated: Date()});
   	console.log('node messages added');
   	response.status(201).send('node messages added');
