@@ -18,6 +18,7 @@ app.use(function(req,res,next){
 app.post('/', function(request, response) {
 	var db = request.db;
 	var nodeMessagesCollection = db.get('node_messages');
+	console.log(request.body);
 	request.body.forEach(function(node_message) {
 		nodeMessagesCollection.insert(node_message);
 	});
