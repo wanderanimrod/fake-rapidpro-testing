@@ -12,7 +12,7 @@ app.use(function(req,res,next){
 });
 
 // Fixtures
-var fakeUser = JSON.parse(fs.readFileSync('fake-user.json', 'utf8'));
+var fakeUser = JSON.parse(fs.readFileSync('fixtures/fake-user.json', 'utf8'));
 
 app.post('/', function(request, response) {
 	console.log(request.body);
