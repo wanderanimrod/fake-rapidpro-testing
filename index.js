@@ -2,39 +2,25 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
 app.use(bodyParser.json());
-
-var mongo = require('mongodb');
-var monk = require('monk');
-var db = monk(process.env.MONGOLAB_URI || 'localhost:27017/node_messages');
+fs = require('fs');
 
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 
 app.use(function(req,res,next){
-    req.db = db;
     next();
 });
 
+// Fixtures
+var fakeUser = JSON.parse(fs.readFileSync('fake-user.json', 'utf8'));
+
 app.post('/', function(request, response) {
-	var db = request.db;
-	var nodeMessagesCollection = db.get('node_messages');
 	console.log(request.body);
-	request.body.forEach(function(node_message) {
-		nodeMessagesCollection.insert(node_message);
-	});
-	var lastUpdatedCollection = db.get('last_updated');
-	lastUpdatedCollection.remove({});
-	lastUpdatedCollection.insert({lastUpdated: Date()});
-  	console.log('node messages added');
-  	response.status(201).send('node messages added');
+	response.status(201).send(fakeUser);
 });
 
 app.get('/', function(request, response) {
-	request.db.get('last_updated').findOne({}).then(function(lastUpdatedDoc) {
-		var lastUpdated = lastUpdatedDoc ? lastUpdatedDoc.lastUpdated : 'NO DATA RECEIVED SINCE UPGRADE.';
-		response.status(200).send('Last received data at: ' + lastUpdated);
-	});
-
+	response.status(200).send('I have got your request');
 });
 
 app.listen(app.get('port'), function() {
